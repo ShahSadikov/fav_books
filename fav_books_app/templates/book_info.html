@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+    {% load static %}
+    <link rel="stylesheet" href="{% static "css/style.css" %}">
+    <title>Dashboard</title>
+</head>
+<body>
+    <div id="wrapper">
+        <div class="container2">
+            <nav class="navbar navbar-light bg-light">
+                <a class="navbar-brand"><span>The Favorite Books</span> &#x1F4DA;</a>
+                <form action="/user/logout" class="form-inline">
+                    <p class="navbar-brand">Welcome {{logged_user.first_name}} </p> 
+                    <a href="/user/logout"></a><button class="btn btn-outline-success my-2 my-sm-0" type="submit">Log out</button></a>
+                </form>
+            </nav>
+            <div class="row">
+                <div class="col"> <!-- DISPLAY the BOOK info -->
+                    <h3>{{the_book.title}}</h3>
+                    <div class="book_info_details">
+                        <p><span>Added by:</span> {{the_book.uploaded_by.first_name}} {{the_book.uploaded_by.last_name}}</p>
+                        <p><span>Added on:</span> {{the_book.created_at}}</p>
+                        <p><span>Last updated on:</span> {{the_book.updated_at}}</p>
+                    </div>
+                    {% if the_book.uploaded_by.id != request.session.logged_user %}
+                        <p class="desc"><span>Description:</span> {{the_book.description}}</p>
+                    {% else %}
+                    <form action="/books/{{the_book.id}}/update" method="POST" class="form-group">
+                        {% csrf_token %}
+                        <label for="description" class="Desc">Description</label>
+                        <textarea class="form-control" cols="30" rows="10" name="description">{{the_book.description}}</textarea>
+                        <div class="row_btn">
+                            <button class="btn_edit btn-outline-info btn-sm mt-3">Edit comment</button>
+                        </div> 
+                    </form>
+                    <a href="/books/{{the_book.id}}/delete"><button class="btn_delete btn-outline-danger btn-sm">Delete book</button></a>
+                    {% endif %}
+                </div>
+                <div class="col"> 
+                    <h3>User Who Like This Book:</h3>
+                    <ul>
+                        {% for fav in the_book.books_liked_by.all %}
+                            <li class="likedBy_list">{{fav.first_name}} {{fav.last_name}}</li>
+                        {% endfor %}
+                    </ul>
+                    <div class="add_remove_link">
+                        {% if logged_user in the_book.books_liked_by.all %}
+                        <a href="/books/{{the_book.id}}/drop_from_fav" class="btn_remove_fav btn-link"> &#8592 Remove this book from my favorites</a>
+                        {% else %}
+                        <a href="/books/{{the_book.id}}/add_to_fav" role="button" class="btn_add_fav btn-link"> &#8592 Add this book to my favorites</a>
+                        {% endif %}
+                    </div>
+                    <div class="btn_home">
+                        <a href="/user/dashboard"><button class="btn btn-primary mt-3">Home</button></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

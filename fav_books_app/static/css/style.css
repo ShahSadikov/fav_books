@@ -1,0 +1,57 @@
+*{
+    margin: 0;
+    padding: 0;
+}
+#wrapper{
+    width: 1200px;
+    margin: 0px auto;
+    background-color: aliceblue;
+}
+.favBooksIntro_title{
+    color: tomato;
+    padding: 20px 20px 0px;
+}
+.favBooksIntro_subtitle{
+    padding: 5px 20px 10px;
+}
+
+.col{
+    padding: 40px;
+}
+.navbar{
+    border: 1px solid black;
+}
+.navbar-brand span{
+    margin-top: 10px;
+    color: tomato;
+}
+.all_books{
+    padding: 5px 0px;
+}
+.likedBy_list{
+    list-style: inside;
+    margin-left: 20px;
+}
+.add_remove_link{
+    margin-top: 50px;
+}
+.book_info_details p{
+    padding: 0px;
+    margin: 0px;
+}
+.book_info_details span{
+    color: blue;
+}
+.desc{
+    padding-top: 10px;
+}
+.desc span{ 
+    color: blue;
+}
+.Desc{
+    color: blue;
+    padding-top: 10px;
+}
+.btn_home{
+    margin: 10px;
+}

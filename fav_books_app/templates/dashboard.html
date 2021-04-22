@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+    {% load static %}
+    <link rel="stylesheet" href="{% static "css/style.css" %}">
+    <title>Dashboard</title>
+</head>
+<body>
+    <div id="wrapper">
+        <div class="container2">
+            <nav class="navbar navbar-light bg-light">
+                <a class="navbar-brand"><span>The Favorite Books</span> &#x1F4DA;</a>
+                <form action="/user/logout" class="form-inline">
+                    <p class="navbar-brand">Welcome {{logged_user.first_name}} </p> 
+                    <a href="/user/logout"></a><button class="btn btn-outline-success my-2 my-sm-0" type="submit">Log out</button></a>
+                </form>
+            </nav>
+            <div class="row">
+                <div class="col">
+                    <!-- VALIDATOR MESSAGES -->
+                    {% if messages %}
+                        <ul class="messages">    
+                            {% for message in messages %}    
+                                <li {% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>    
+                            {% endfor %}
+                        </ul>
+                    {% endif %}
+                    <!-- Add Book Form -->
+                    <h3>Add a favorite book</h3>
+                    <form action="/books/add" method="POST" class="form-group">
+                        {% csrf_token %}
+                        <label for="title">Title</label>
+                        <input type="text" class="form-control" name="title">
+
+                        <label for="description">Description</label>
+                        <textarea class="form-control" cols="30" rows="10" name="description"></textarea>
+                        
+                        <button class="btn btn-success mt-3">Add</button>   
+                    </form>
+                </div>
+                <div class="col">
+                    <h3>All Books:</h3>
+                    <div> <!-- DISPLAY ALL BOOKS -->
+                        {% for book in all_books %}
+                        {% if logged_user in book.books_liked_by.all %}
+                        <div class="all_books">
+                            <a href="/books/book_info/{{book.id}}"><h5>{{book.title}}</h5></a>
+                            <p class="by">added by: {{book.uploaded_by.first_name}} {{book.uploaded_by.last_name}} - {{book.created_at}}</p>
+                            {% if book.books_liked_by.id == request.session.logged_user %}
+                            <p>this book is in your favorite list</p>
+                            {% endif %}
+                        </div>
+                        {% endif %}
+                        {% endfor %} 
+                    </div>
+                    <h3>Other Books:</h3>
+                    <div> <!-- DISPLAY other BOOKS -->
+                        {% for book in all_books %}
+                        {% if logged_user not in book.books_liked_by.all %}
+                        <div class="all_books">
+                            <a href="/books/book_info/{{book.id}}"><h5>{{book.title}}</h5></a>
+                            <p class="by">added by: {{book.uploaded_by.first_name}} {{book.uploaded_by.last_name}} - {{book.created_at}}</p>
+                        </div>
+                        {% endif %}
+                        {% endfor %} 
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
